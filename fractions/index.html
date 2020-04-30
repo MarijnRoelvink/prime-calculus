@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Fraction splitting</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="../css/cmun-bright.css">
+	<link rel="stylesheet" type="text/css" href="../css/cmun-bright-semibold.css">
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+	<script src="../js/jquery-3.4.1.min.js"></script>
+	<script src="../js/helpers.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+	        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+	        crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+	<style>
+		html, body, .graph-container {
+			width: 100%;
+			height: 100%;
+			font-family: "Computer Modern Bright", sans-serif;
+			background-color: black;
+			color: white;
+		}
+
+		#control-panel {
+			border-right: 1px solid white;
+			padding: 10px;
+		}
+
+		.fraction {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.fraction .up {
+			border-bottom: 1px solid white;
+			text-align: center;
+		}
+
+		.formula > div {
+			width: max-content;
+			margin: 0.25rem;
+		}
+
+		.formula {
+			padding: 10px;
+		}
+
+		.slider-container {
+			display: flex;
+		}
+
+		.slider-container > div {
+			margin: 10px;
+		}
+
+	</style>
+</head>
+<body>
+<div class="d-flex w-100 h-100">
+	<div id="control-panel">
+		<div class="formula d-flex no-wrap pink">
+			<div>f(x) =</div>
+			<div class="fraction">
+				<div class="up">1</div>
+				<div class="down">(x + 1)(x + 2)</div>
+			</div>
+		</div>
+		<div class="formula d-flex no-wrap ">
+			<div class="green">g(x) =</div>
+			<div class="fraction yellow">
+				<div class="up">A</div>
+				<div class="down">(x + x1)</div>
+			</div>
+			<div>+</div>
+			<div class="fraction blue">
+				<div class="up">B</div>
+				<div class="down">(x + x2)</div>
+			</div>
+		</div>
+		<div class="yellow slider-container">
+			<div>A:</div>
+			<input type="range" min="-10" max="10" value="1" step="0.25" class="slider" id="a-slider">
+			<span id="a-value"></span>
+		</div>
+		<div class="yellow slider-container">
+			<div>x1:</div>
+			<input type="range" min="-10" max="10" value="1" step="0.25" class="slider" id="x1-slider">
+			<span id="x1-value"></span>
+		</div>
+		<div class="blue slider-container">
+			<div>B:</div>
+			<input type="range" min="-10" max="10" value="1" step="0.25" class="slider" id="b-slider">
+			<span id="b-value"></span>
+		</div>
+		<div class="blue slider-container">
+			<div>x2:</div>
+			<input type="range" min="-10" max="10" value="2" step="0.25" class="slider" id="x2-slider">
+			<span id="x2-value"></span>
+		</div>
+	</div>
+	<div class="graph-container">
+		<canvas id="graph"></canvas>
+	</div>
+</div>
+</body>
+<script src="Functions.js"></script>
+<script src="controls.js"></script>
+<script src="main.js"></script>
+</html>
