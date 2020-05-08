@@ -27,20 +27,52 @@ class Functions {
 		let vertices = [];
 		for (let i = 0; i < (numPoints); i++) {
 			let index = i * (this.domain.max - this.domain.min) / numPoints + this.domain.min;
-			vertices.push({
-				x: index,
-				y: f(index)
-			});
+			if(!isFinite(f(index))) {
+				let step = this.convergeToRange(f, index);
+				let before = index - step;
+				vertices.push({
+					x: before,
+					y: f(before)
+				});
+				vertices.push({
+					x: index,
+					y: f(index)
+				});
+				let next = index + step;
+				vertices.push({
+					x: next,
+					y: f(next)
+				});
+			} else {
+				vertices.push({
+					x: index,
+					y: f(index)
+				});
+			}
 		}
 		return vertices;
 	}
 
+	convergeToRange(f, index) {
+		let scale = 10;
+		let i = index - 1/(this.sampleRate*scale);
+		let dif = 1;
+		while(dif !== 0 && isFinite(f(i)) && !(f(i) > this.range.max || f(i) < this.range.min)) {
+			let oldI = i;
+			scale = scale*scale;
+			i = index - 1/(this.sampleRate*scale);
+			dif = f(oldI) - f(i);
+		}
+		return 1/(this.sampleRate*scale);
+	}
+
+
 	getIndexFunctionPoints(f) {
 		switch(f) {
-			case 0: return this.getComposedFractionPoints();
-			case 1: return this.getAFractionPoints();
-			case 2: return this.getBFractionPoints();
-			case 3: return this.getAPlusBFractionPoints();
+			case "COMPOSED": return this.getComposedFractionPoints();
+			case "A": return this.getAFractionPoints();
+			case "B": return this.getBFractionPoints();
+			case "A_PLUS_B": return this.getAPlusBFractionPoints();
 		}
 	}
 
@@ -52,19 +84,19 @@ class Functions {
 
 	getAFractionPoints() {
 		return this.getFunctionPoints((index) => {
-			return this.vars.a / (index + this.vars.x1);
+			return this.vars.a / (index - this.vars.x1);
 		});
 	}
 
 	getBFractionPoints() {
 		return this.getFunctionPoints((index) => {
-			return this.vars.b / (index + this.vars.x2);
+			return this.vars.b / (index - this.vars.x2);
 		});
 	}
 
 	getAPlusBFractionPoints() {
 		return this.getFunctionPoints((index) => {
-			return this.vars.a / (index + this.vars.x1) + this.vars.b / (index + this.vars.x2);
+			return this.vars.a / (index - this.vars.x1) + this.vars.b / (index - this.vars.x2);
 		});
 	}
 }

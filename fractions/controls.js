@@ -10,13 +10,13 @@ function updateSliders() {
 			switch (id) {
 				case "a":
 				case "x1":
-					updateChart(state.dataIndex.A);
-					updateChart(state.dataIndex.A_PLUS_B);
+					updateChart("A");
+					updateChart("A_PLUS_B");
 					break;
 				case "b":
 				case "x2":
-					updateChart(state.dataIndex.B);
-					updateChart(state.dataIndex.A_PLUS_B);
+					updateChart("B");
+					updateChart("A_PLUS_B");
 			}
 		}
 	});

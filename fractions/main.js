@@ -10,16 +10,21 @@ let state = {
 	functions: {},
 	chart: {},
 	dataIndex: {
-		COMPOSED: 0,
-		A: 1,
-		B: 2,
-		A_PLUS_B: 3
+		COMPOSED: 1,
+		A: 2,
+		B: 3,
+		A_PLUS_B: 0
 	}
 };
 
 
 function init() {
-	canvas = document.getElementById('graph');
+	let canvas = document.getElementById('graph');
+	let container = document.getElementsByClassName("graph-container")[0];
+	canvas.width = canvas.clientWidth;
+	canvas.height = canvas.clientHeight;
+	container.width = container.clientWidth;
+	container.height = container.clientHeight;
 
 	state.functions = new Functions({
 		w1: 1,
@@ -41,24 +46,24 @@ function init() {
 		// The data for our dataset
 		data: {
 			datasets: [{
-				label: 'f(x) = 1/((x + 1)(x + 2))',
-				borderColor: 'rgb(255, 99, 132)',
-				data: state.functions.getComposedFractionPoints()
+				label: 'g(x) = A/(x - x1) + B/(x - x2)',
+				borderColor: '#308167',
+				data: state.functions.getAPlusBFractionPoints()
 			},
 				{
-					label: 'A/(x + x1)',
+					label: 'f(x) = 1/((x + 1)(x + 2))',
+					borderColor: 'rgb(255, 99, 132)',
+					data: state.functions.getComposedFractionPoints()
+				},
+				{
+					label: 'A/(x - x1)',
 					borderColor: '#ffce2e',
 					data: state.functions.getAFractionPoints()
 				},
 				{
-					label: 'B/(x + x1)',
+					label: 'B/(x - x2)',
 					borderColor: '#7ab1e8',
 					data: state.functions.getBFractionPoints()
-				},
-				{
-					label: 'g(x) = A/(x + x1) + B/(x + x2)',
-					borderColor: '#90f456',
-					data: state.functions.getAPlusBFractionPoints()
 				}
 			]
 		},
@@ -113,8 +118,7 @@ function init() {
 			}
 		}
 	});
-
-	tick();
+	setTimeout(tick, 1000);
 }
 
 function tick() {
@@ -122,24 +126,8 @@ function tick() {
 	updateSliders();
 }
 
-function addData(chart, label, data) {
-	chart.data.labels.push(label);
-	chart.data.datasets.forEach((dataset) => {
-		dataset.data.push(data);
-	});
-	chart.update();
-}
-
-function removeData(chart) {
-	chart.data.labels.pop();
-	chart.data.datasets.forEach((dataset) => {
-		dataset.data.pop();
-	});
-	chart.update();
-}
-
 function updateChart(index) {
-	state.chart.data.datasets[index].data = state.functions.getIndexFunctionPoints(index);
+	state.chart.data.datasets[state.dataIndex[index]].data = state.functions.getIndexFunctionPoints(index);
 	state.chart.update();
 }
 
