@@ -13,7 +13,9 @@ let state = {
 		COMPOSED: 1,
 		A: 2,
 		B: 3,
-		A_PLUS_B: 0
+		A_PLUS_B: 0,
+		ASYMP_A: 4,
+		ASYMP_B: 5
 	}
 };
 
@@ -64,6 +66,19 @@ function init() {
 					label: 'B/(x - x2)',
 					borderColor: '#7ab1e8',
 					data: state.functions.getBFractionPoints()
+				}, {
+					label: 'Asymptote x1',
+					borderColor: '#ffce2e',
+					borderDash: [10, 10],
+					hidden: true,
+					data: state.functions.getAsymptote(state.functions.vars.x1)
+				},
+				{
+					label: 'Asymptote x2',
+					borderColor: '#7ab1e8',
+					borderDash: [10, 10],
+					hidden: true,
+					data: state.functions.getAsymptote(state.functions.vars.x2)
 				}
 			]
 		},

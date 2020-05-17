@@ -26,3 +26,11 @@
     background-color: #e3ddd8;
     border-color: #e3ddd8;
 }
+
+input[type="text"] {
+    height: 20px;
+    background: #2e2d2d;
+    border: none;
+    width: 25px;
+}
+

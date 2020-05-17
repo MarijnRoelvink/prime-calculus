@@ -1,4 +1,3 @@
-
 class Functions {
 	/**
 	 * f(x) = 1/((x + w1)(x + w2))
@@ -23,11 +22,11 @@ class Functions {
 	}
 
 	getFunctionPoints(f) {
-		let numPoints = (this.domain.max - this.domain.min)*this.sampleRate;
+		let numPoints = (this.domain.max - this.domain.min) * this.sampleRate;
 		let vertices = [];
 		for (let i = 0; i < (numPoints); i++) {
 			let index = i * (this.domain.max - this.domain.min) / numPoints + this.domain.min;
-			if(!isFinite(f(index))) {
+			if (!isFinite(f(index))) {
 				let step = this.convergeToRange(f, index);
 				let before = index - step;
 				vertices.push({
@@ -53,32 +52,53 @@ class Functions {
 		return vertices;
 	}
 
+	getAsymptote(x) {
+		return [
+			{
+				x: x,
+				y: this.range.min
+			},
+			{
+				x: x,
+				y: this.range.max
+			}
+		]
+	}
+
 	convergeToRange(f, index) {
 		let scale = 10;
-		let i = index - 1/(this.sampleRate*scale);
+		let i = index - 1 / (this.sampleRate * scale);
 		let dif = 1;
-		while(dif !== 0 && isFinite(f(i)) && !(f(i) > this.range.max || f(i) < this.range.min)) {
+		while (dif !== 0 && isFinite(f(i)) && !(f(i) > this.range.max || f(i) < this.range.min)) {
 			let oldI = i;
-			scale = scale*scale;
-			i = index - 1/(this.sampleRate*scale);
+			scale = scale * scale;
+			i = index - 1 / (this.sampleRate * scale);
 			dif = f(oldI) - f(i);
 		}
-		return 1/(this.sampleRate*scale);
+		return 1 / (this.sampleRate * scale);
 	}
 
 
 	getIndexFunctionPoints(f) {
-		switch(f) {
-			case "COMPOSED": return this.getComposedFractionPoints();
-			case "A": return this.getAFractionPoints();
-			case "B": return this.getBFractionPoints();
-			case "A_PLUS_B": return this.getAPlusBFractionPoints();
+		switch (f) {
+			case "COMPOSED":
+				return this.getComposedFractionPoints();
+			case "A":
+				return this.getAFractionPoints();
+			case "B":
+				return this.getBFractionPoints();
+			case "A_PLUS_B":
+				return this.getAPlusBFractionPoints();
+			case "ASYMP_A":
+				return this.getAsymptote(this.vars.x1);
+			case "ASYMP_B":
+				return this.getAsymptote(this.vars.x2);
 		}
 	}
 
 	getComposedFractionPoints() {
 		return this.getFunctionPoints((index) => {
-			return 1 / ((index + this.vars.w1)*(index + this.vars.w2));
+			return 1 / ((index + this.vars.w1) * (index + this.vars.w2));
 		})
 	}
 

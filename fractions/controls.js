@@ -12,11 +12,13 @@ function updateSliders() {
 				case "x1":
 					updateChart("A");
 					updateChart("A_PLUS_B");
+					updateChart("ASYMP_A");
 					break;
 				case "b":
 				case "x2":
 					updateChart("B");
 					updateChart("A_PLUS_B");
+					updateChart("ASYMP_B");
 			}
 		}
 	});
