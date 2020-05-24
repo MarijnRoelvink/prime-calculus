@@ -28,7 +28,8 @@ class Functions {
 		let numPoints = (this.domain.max - this.domain.min) * this.sampleRate;
 		let vertices = [];
 		for (let i = 0; i < (numPoints); i++) {
-			let index = i * (this.domain.max - this.domain.min) / numPoints + this.domain.min;
+			let index = i/this.sampleRate + this.domain.min;
+			index = parseFloat(index.toFixed(6));
 			if (!isFinite(f(index))) {
 				let step = this.convergeToRange(f, index);
 				let before = index - step;
