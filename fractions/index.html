@@ -72,6 +72,10 @@
 			margin: 10px;
 		}
 
+		input[type="text"], input[type="number"] {
+			margin-right: 5px;
+		}
+
 	</style>
 </head>
 <body>
@@ -79,9 +83,9 @@
 	<div id="control-panel">
 		<div class="formula d-flex no-wrap pink">
 			<div class="formula-name">f(x) =</div>
-			<div class="fraction">
-				<div class="up"><input type="text" value="0">x + <input type="text" value="1"></div>
-				<div class="down"><input type="text" value="1">x^2 + <input type="text" value="3">x + <input type="text" value="2"></div>
+			<div id="fx" class="fraction">
+				<div class="up"><input id="fa" type="text" value="0">x + <input id="fb" type="text" value="1"></div>
+				<div class="down"><input id="fc" type="text" value="1">x^2 + <input id="fd" type="text" value="3">x + <input id="fe" type="text" value="2"></div>
 			</div>
 		</div>
 		<div class="formula d-flex no-wrap ">

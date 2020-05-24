@@ -27,10 +27,11 @@
     border-color: #e3ddd8;
 }
 
-input[type="text"] {
+input[type="text"], input[type="number"] {
     height: 20px;
     background: #2e2d2d;
     border: none;
     width: 25px;
+    border: 1px solid #5d5c5c;
 }
 

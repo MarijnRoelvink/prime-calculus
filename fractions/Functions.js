@@ -1,12 +1,15 @@
 class Functions {
 	/**
-	 * f(x) = 1/((x + w1)(x + w2))
+	 * f(x) = fa*x + fb/(fc*x^2 + fd*x + fe)
 	 * g(x) = a/(x + x1) + b/(x + x2)
 	 */
-	constructor({w1, w2, a, b, x1, x2}, domain, range) {
+	constructor({fa, fb, fc, fd, fe, a, b, x1, x2}, domain, range) {
 		this.vars = {
-			w1: w1,
-			w2: w2,
+			fa: fa,
+			fb: fb,
+			fc: fc,
+			fd: fd,
+			fe: fe,
 			a: a,
 			b: b,
 			x1: x1,
@@ -97,8 +100,9 @@ class Functions {
 	}
 
 	getComposedFractionPoints() {
+		let v = this.vars;
 		return this.getFunctionPoints((index) => {
-			return 1 / ((index + this.vars.w1) * (index + this.vars.w2));
+			return (v.fa*index + v.fb) / (v.fc*(index**2) + v.fd*index + v.fe);
 		})
 	}
 

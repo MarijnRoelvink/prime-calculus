@@ -11,9 +11,9 @@ let state = {
 	chart: {},
 	dataIndex: {
 		COMPOSED: 1,
+		A_PLUS_B: 0,
 		A: 2,
 		B: 3,
-		A_PLUS_B: 0,
 		ASYMP_A: 4,
 		ASYMP_B: 5
 	}
@@ -28,14 +28,21 @@ function init() {
 	container.width = container.clientWidth;
 	container.height = container.clientHeight;
 
+
 	state.functions = new Functions({
-		w1: 1,
-		w2: 2,
+		fa: getUrlQuery("fa", 0),
+		fb: getUrlQuery("fb", 1),
+		fc: getUrlQuery("fc", 1),
+		fd: getUrlQuery("fd", 3),
+		fe: getUrlQuery("fe", 2),
 		a: 1,
 		b: 1,
 		x1: 1,
 		x2: 2
 	}, state.domain, state.range);
+	setInput();
+
+
 
 	let ctx = document.getElementById('graph').getContext('2d');
 	Chart.defaults.global.elements.point.radius = 0;
@@ -47,11 +54,12 @@ function init() {
 
 		// The data for our dataset
 		data: {
-			datasets: [{
-				label: 'g(x) = A/(x - x1) + B/(x - x2)',
-				borderColor: '#308167',
-				data: state.functions.getAPlusBFractionPoints()
-			},
+			datasets: [
+				{
+					label: 'g(x) = A/(x - x1) + B/(x - x2)',
+					borderColor: '#308167',
+					data: state.functions.getAPlusBFractionPoints()
+				},
 				{
 					label: 'f(x) = 1/((x + 1)(x + 2))',
 					borderColor: 'rgb(255, 99, 132)',
@@ -138,12 +146,23 @@ function init() {
 
 function tick() {
 	requestAnimFrame(tick);
-	updateSliders();
+	updateInput();
 }
 
 function updateChart(index) {
 	state.chart.data.datasets[state.dataIndex[index]].data = state.functions.getIndexFunctionPoints(index);
 	state.chart.update();
+}
+
+function getUrlQuery(q, defaultV = "") {
+	let query = {};
+	let parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+		query[key] = value;
+	});
+	if(typeof(query[q]) === "undefined") {
+		query[q] = defaultV;
+	}
+	return query[q];
 }
 
 init();
