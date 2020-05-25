@@ -10,7 +10,6 @@ function setInput() {
 	});
 }
 function updateInput() {
-
 	$(".slider").each(function () {
 		let id = this.id.split("-")[0];
 		$("#" + id + "-value").html($(this).val());

@@ -9,14 +9,7 @@ let state = {
 	},
 	functions: {},
 	chart: {},
-	dataIndex: {
-		COMPOSED: 1,
-		A_PLUS_B: 0,
-		A: 2,
-		B: 3,
-		ASYMP_A: 4,
-		ASYMP_B: 5
-	}
+	data: {}
 };
 
 
@@ -28,13 +21,12 @@ function init() {
 	container.width = container.clientWidth;
 	container.height = container.clientHeight;
 
-
 	state.functions = new Functions({
-		fa: getUrlQuery("fa", 0),
-		fb: getUrlQuery("fb", 1),
-		fc: getUrlQuery("fc", 1),
-		fd: getUrlQuery("fd", 3),
-		fe: getUrlQuery("fe", 2),
+		fa: parseFloat(getUrlQuery("fa", 0)),
+		fb: parseFloat(getUrlQuery("fb", 1)),
+		fc: parseFloat(getUrlQuery("fc", 1)),
+		fd: parseFloat(getUrlQuery("fd", 3)),
+		fe: parseFloat(getUrlQuery("fe", 2)),
 		a: 1,
 		b: 1,
 		x1: 1,
@@ -42,7 +34,79 @@ function init() {
 	}, state.domain, state.range);
 	setInput();
 
-
+	let v = state.functions.vars;
+	let formAdd = (el, plusSign = true, x = '') => {
+		if(!el) {
+			return '';
+		}
+		if(plusSign) {
+			return (el > 0? '+ ': '- ') + Math.abs(el) + x;
+		} else {
+			return (el < 0? '+ ': '- ') + Math.abs(el) + x;
+		}
+	};
+	state.data = {
+		COMPOSED: {
+			labelFormat: () => {
+				let str = 'f(x) = (' + formAdd(v.fa, true, 'x ') + formAdd(v.fb) + ')/' +
+				'(' + formAdd(v.fc, true, 'x^2 ') + formAdd(v.fd, true, 'x ') + formAdd(v.fe) + ')';
+				str = str.replace(/\(\+\s/g, '(');
+				str = str.replace(/\(\)/g, '0');
+				return str;
+			},
+			label: 'f(x) = 1/((x + 1)(x + 2))',
+			borderColor: 'rgb(255, 99, 132)',
+			data: state.functions.getComposedFractionPoints()
+		},
+		A_PLUS_B: {
+			labelFormat: () => {
+				return 'g(x) = ' + v.a + '/(x ' + formAdd(v.x1, false) + ') + '  +
+					v.b + '/(x ' + formAdd(v.x2, false) + ')';
+			},
+			label: 'g(x) = A/(x - x1) + B/(x - x2)',
+			borderColor: '#308167',
+			data: state.functions.getAPlusBFractionPoints()
+		},
+		A: {
+			labelFormat: () => {
+				return v.a + '/(x ' + formAdd(v.x1, false) + ')';
+			},
+			label: 'A/(x - x1)',
+			borderColor: '#ffce2e',
+			data: state.functions.getAFractionPoints()
+		},
+		B: {
+			labelFormat: () => {
+				return v.b + '/(x ' + formAdd(v.x2, false)+ ')';
+			},
+			label: 'B/(x - x2)',
+			borderColor: '#7ab1e8',
+			data: state.functions.getBFractionPoints()
+		},
+		ASYMP_A: {
+			labelFormat: () => {
+				return 'Asymptote x1';
+			},
+			label: 'Asymptote x1',
+			borderColor: '#ffce2e',
+			borderDash: [10, 10],
+			hidden: true,
+			data: state.functions.getAsymptote(state.functions.vars.x1)
+		},
+		ASYMP_B: {
+			labelFormat: () => {
+				return 'Asymptote x2';
+			},
+			label: 'Asymptote x2',
+			borderColor: '#7ab1e8',
+			borderDash: [10, 10],
+			hidden: true,
+			data: state.functions.getAsymptote(state.functions.vars.x2)
+		}
+	};
+	Object.values(state.data).forEach(x =>{
+		x.label = x.labelFormat();
+	});
 
 	let ctx = document.getElementById('graph').getContext('2d');
 	Chart.defaults.global.elements.point.radius = 0;
@@ -54,41 +118,7 @@ function init() {
 
 		// The data for our dataset
 		data: {
-			datasets: [
-				{
-					label: 'g(x) = A/(x - x1) + B/(x - x2)',
-					borderColor: '#308167',
-					data: state.functions.getAPlusBFractionPoints()
-				},
-				{
-					label: 'f(x) = 1/((x + 1)(x + 2))',
-					borderColor: 'rgb(255, 99, 132)',
-					data: state.functions.getComposedFractionPoints()
-				},
-				{
-					label: 'A/(x - x1)',
-					borderColor: '#ffce2e',
-					data: state.functions.getAFractionPoints()
-				},
-				{
-					label: 'B/(x - x2)',
-					borderColor: '#7ab1e8',
-					data: state.functions.getBFractionPoints()
-				}, {
-					label: 'Asymptote x1',
-					borderColor: '#ffce2e',
-					borderDash: [10, 10],
-					hidden: true,
-					data: state.functions.getAsymptote(state.functions.vars.x1)
-				},
-				{
-					label: 'Asymptote x2',
-					borderColor: '#7ab1e8',
-					borderDash: [10, 10],
-					hidden: true,
-					data: state.functions.getAsymptote(state.functions.vars.x2)
-				}
-			]
+			datasets: Object.values(state.data)
 		},
 
 		// Configuration options go here
@@ -150,7 +180,8 @@ function tick() {
 }
 
 function updateChart(index) {
-	state.chart.data.datasets[state.dataIndex[index]].data = state.functions.getIndexFunctionPoints(index);
+	state.data[index].data = state.functions.getIndexFunctionPoints(index);
+	state.data[index].label = state.data[index].labelFormat();
 	state.chart.update();
 }
 
@@ -159,7 +190,7 @@ function getUrlQuery(q, defaultV = "") {
 	let parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
 		query[key] = value;
 	});
-	if(typeof(query[q]) === "undefined") {
+	if (typeof (query[q]) === "undefined") {
 		query[q] = defaultV;
 	}
 	return query[q];
