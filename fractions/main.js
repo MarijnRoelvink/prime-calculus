@@ -46,26 +46,21 @@ function init() {
 		}
 	};
 	state.data = {
-		COMPOSED: {
-			labelFormat: () => {
-				let str = 'f(x) = (' + formAdd(v.fa, true, 'x ') + formAdd(v.fb) + ')/' +
-				'(' + formAdd(v.fc, true, 'x^2 ') + formAdd(v.fd, true, 'x ') + formAdd(v.fe) + ')';
-				str = str.replace(/\(\+\s/g, '(');
-				str = str.replace(/\(\)/g, '0');
-				return str;
-			},
-			label: 'f(x) = 1/((x + 1)(x + 2))',
-			borderColor: 'rgb(255, 99, 132)',
-			data: state.functions.getComposedFractionPoints()
-		},
 		A_PLUS_B: {
 			labelFormat: () => {
-				return 'g(x) = ' + v.a + '/(x ' + formAdd(v.x1, false) + ') + '  +
-					v.b + '/(x ' + formAdd(v.x2, false) + ')';
+				return 'g(x)';
 			},
 			label: 'g(x) = A/(x - x1) + B/(x - x2)',
 			borderColor: '#308167',
 			data: state.functions.getAPlusBFractionPoints()
+		},
+		COMPOSED: {
+			labelFormat: () => {
+				return 'f(x)';
+			},
+			label: 'f(x) = 1/((x + 1)(x + 2))',
+			borderColor: 'rgb(255, 99, 132)',
+			data: state.functions.getComposedFractionPoints()
 		},
 		A: {
 			labelFormat: () => {
@@ -135,7 +130,8 @@ function init() {
 			legend: {
 				labels: {
 					// This more specific font property overrides the global property
-					fontColor: '#fff'
+					fontColor: '#fff',
+					fontSize: 16
 				}
 			},
 			scales: {

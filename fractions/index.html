@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Fraction splitting</title>
+	<title>Partial fractions</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="../css/cmun-bright.css">
@@ -66,14 +66,28 @@
 
 		.slider-container {
 			display: flex;
+			justify-content: space-between;
+			align-items: center;
 		}
 
 		.slider-container > div {
 			margin: 10px;
 		}
 
+		.slider-container span {
+			width: 30px;
+			height: fit-content;
+			margin-left: 5px;
+		}
+
 		input[type="text"], input[type="number"] {
 			margin-right: 5px;
+		}
+
+		.step-icon {
+			width: 20px;
+			margin-left: 5px;
+			cursor: pointer;
 		}
 
 	</style>
@@ -85,40 +99,48 @@
 			<div class="formula-name">f(x) =</div>
 			<div id="fx" class="fraction">
 				<div class="up"><input id="fa" type="text" value="0">x + <input id="fb" type="text" value="1"></div>
-				<div class="down"><input id="fc" type="text" value="1">x^2 + <input id="fd" type="text" value="3">x + <input id="fe" type="text" value="2"></div>
+				<div class="down"><input id="fc" type="text" value="1">x<sup>2</sup> + <input id="fd" type="text" value="3">x + <input id="fe" type="text" value="2"></div>
 			</div>
 		</div>
 		<div class="formula d-flex no-wrap ">
 			<div class="green formula-name">g(x) =</div>
 			<div class="fraction yellow">
 				<div class="up">A</div>
-				<div class="down">(x - x1)</div>
+				<div class="down">(x - x<sub>1</sub>)</div>
 			</div>
 			<div>+</div>
 			<div class="fraction blue">
 				<div class="up">B</div>
-				<div class="down">(x - x2)</div>
+				<div class="down">(x - x<sub>2</sub>)</div>
 			</div>
 		</div>
 		<div class="yellow slider-container">
 			<div>A:</div>
 			<input type="range" min="-10" max="10" value="1" step="0.1" class="slider" id="a-slider">
 			<span id="a-value"></span>
+			<img class="step-icon" onclick="incrementSlider('a', 1)" src="../resources/plus_yellow.svg">
+			<img class="step-icon" onclick="incrementSlider('a', -1)" src="../resources/minus_yellow.svg">
 		</div>
 		<div class="yellow slider-container">
-			<div>x1:</div>
+			<div>x<sub>1</sub>:</div>
 			<input type="range" min="-10" max="10" value="1" step="0.1" class="slider" id="x1-slider">
 			<span id="x1-value"></span>
+			<img class="step-icon" onclick="incrementSlider('x1', 1)" src="../resources/plus_yellow.svg">
+			<img class="step-icon" onclick="incrementSlider('x1', -1)" src="../resources/minus_yellow.svg">
 		</div>
 		<div class="blue slider-container">
 			<div>B:</div>
 			<input type="range" min="-10" max="10" value="1" step="0.1" class="slider" id="b-slider">
 			<span id="b-value"></span>
+			<img class="step-icon" onclick="incrementSlider('b', 1)" src="../resources/plus_blue.svg">
+			<img class="step-icon" onclick="incrementSlider('b', -1)" src="../resources/minus_blue.svg">
 		</div>
 		<div class="blue slider-container">
-			<div>x2:</div>
+			<div>x<sub>2</sub>:</div>
 			<input type="range" min="-10" max="10" value="2" step="0.1" class="slider" id="x2-slider">
 			<span id="x2-value"></span>
+			<img class="step-icon" onclick="incrementSlider('x2', 1)" src="../resources/plus_blue.svg">
+			<img class="step-icon" onclick="incrementSlider('x2', -1)" src="../resources/minus_blue.svg">
 		</div>
 	</div>
 	<div class="graph-container">

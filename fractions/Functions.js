@@ -27,8 +27,9 @@ class Functions {
 	getFunctionPoints(f) {
 		let numPoints = (this.domain.max - this.domain.min) * this.sampleRate;
 		let vertices = [];
+		let oldIndex = 0;
 		for (let i = 0; i < (numPoints); i++) {
-			let index = i/this.sampleRate + this.domain.min;
+			let index = i / this.sampleRate + this.domain.min;
 			index = parseFloat(index.toFixed(6));
 			if (!isFinite(f(index))) {
 				let step = this.convergeToRange(f, index);
@@ -47,11 +48,19 @@ class Functions {
 					y: f(next)
 				});
 			} else {
+				if (Math.abs(f(index) - f(oldIndex)) > 10
+					&& ((f(index) > 0 && f(oldIndex) < 0) || (f(index) < 0 && f(oldIndex) > 0))) {
+					vertices.push({
+						x: (index + oldIndex) / 2.0,
+						y: NaN
+					})
+				}
 				vertices.push({
 					x: index,
 					y: f(index)
 				});
 			}
+			oldIndex = index;
 		}
 		return vertices;
 	}
@@ -103,7 +112,7 @@ class Functions {
 	getComposedFractionPoints() {
 		let v = this.vars;
 		return this.getFunctionPoints((index) => {
-			return (v.fa*index + v.fb) / (v.fc*(index**2) + v.fd*index + v.fe);
+			return (v.fa * index + v.fb) / (v.fc * (index ** 2) + v.fd * index + v.fe);
 		})
 	}
 

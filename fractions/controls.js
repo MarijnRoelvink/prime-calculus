@@ -12,7 +12,7 @@ function setInput() {
 function updateInput() {
 	$(".slider").each(function () {
 		let id = this.id.split("-")[0];
-		$("#" + id + "-value").html($(this).val());
+		$("#" + id + "-value").html(parseFloat($(this).val()).toFixed(1));
 		if(parseFloat($(this).val()) !== state.functions.vars[id]) {
 			state.functions.updateVar(id, parseFloat($(this).val()));
 			switch (id) {
@@ -36,4 +36,9 @@ function updateInput() {
 			updateChart("COMPOSED");
 		}
 	});
+}
+
+function incrementSlider(v, sign) {
+	let el = document.getElementById(v + "-slider");
+	$(el).val(parseFloat(el.value) + parseFloat(sign*el.step));
 }
