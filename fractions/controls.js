@@ -42,3 +42,15 @@ function incrementSlider(v, sign) {
 	let el = document.getElementById(v + "-slider");
 	$(el).val(parseFloat(el.value) + parseFloat(sign*el.step));
 }
+
+function zoom(delta) {
+	state.domain.min -= delta;
+	state.domain.max += delta;
+	state.range.min -= delta;
+	state.range.max += delta;
+	state.chart.config.options.scales.xAxes[0].ticks.min = state.domain.min;
+	state.chart.config.options.scales.xAxes[0].ticks.max = state.domain.max;
+	state.chart.config.options.scales.yAxes[0].ticks.min = state.range.min;
+	state.chart.config.options.scales.yAxes[0].ticks.max = state.range.max;
+	updateChart("all");
+}

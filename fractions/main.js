@@ -176,8 +176,15 @@ function tick() {
 }
 
 function updateChart(index) {
-	state.data[index].data = state.functions.getIndexFunctionPoints(index);
-	state.data[index].label = state.data[index].labelFormat();
+	if(index === "all") {
+		Object.keys(state.data).forEach(k => {
+			state.data[k].data = state.functions.getIndexFunctionPoints(k);
+			state.data[k].label = state.data[k].labelFormat();
+		})
+	} else {
+		state.data[index].data = state.functions.getIndexFunctionPoints(index);
+		state.data[index].label = state.data[index].labelFormat();
+	}
 	state.chart.update();
 }
 
