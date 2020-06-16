@@ -34,4 +34,13 @@ input[type="text"], input[type="number"] {
     width: 25px;
     border: 1px solid #5d5c5c;
 }
+.fraction {
+    display: flex;
+    flex-direction: column;
+}
+
+.fraction .up {
+    border-bottom: 1px solid white;
+    text-align: center;
+}
 
