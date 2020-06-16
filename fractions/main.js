@@ -9,7 +9,12 @@ let state = {
 	},
 	functions: {},
 	chart: {},
-	data: {}
+	data: {},
+	lastPos: {
+		x: 0,
+		y: 0
+	},
+	dragging: false
 };
 
 
@@ -36,13 +41,13 @@ function init() {
 
 	let v = state.functions.vars;
 	let formAdd = (el, plusSign = true, x = '') => {
-		if(!el) {
+		if (!el) {
 			return '';
 		}
-		if(plusSign) {
-			return (el > 0? '+ ': '- ') + Math.abs(el) + x;
+		if (plusSign) {
+			return (el > 0 ? '+ ' : '- ') + Math.abs(el) + x;
 		} else {
-			return (el < 0? '+ ': '- ') + Math.abs(el) + x;
+			return (el < 0 ? '+ ' : '- ') + Math.abs(el) + x;
 		}
 	};
 	state.data = {
@@ -99,7 +104,7 @@ function init() {
 			data: state.functions.getAsymptote(state.functions.vars.x2)
 		}
 	};
-	Object.values(state.data).forEach(x =>{
+	Object.values(state.data).forEach(x => {
 		x.label = x.labelFormat();
 	});
 
@@ -167,6 +172,7 @@ function init() {
 			}
 		}
 	});
+	initMousePan();
 	setTimeout(tick, 1000);
 }
 
@@ -176,7 +182,7 @@ function tick() {
 }
 
 function updateChart(index) {
-	if(index === "all") {
+	if (index === "all") {
 		Object.keys(state.data).forEach(k => {
 			state.data[k].data = state.functions.getIndexFunctionPoints(k);
 			state.data[k].label = state.data[k].labelFormat();
