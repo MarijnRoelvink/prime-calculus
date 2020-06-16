@@ -30,9 +30,9 @@
 input[type="text"], input[type="number"] {
     height: 20px;
     background: #2e2d2d;
-    border: none;
     width: 25px;
     border: 1px solid #5d5c5c;
+    border-radius: 3px;
 }
 .fraction {
     display: flex;
@@ -44,3 +44,21 @@ input[type="text"], input[type="number"] {
     text-align: center;
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

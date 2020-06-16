@@ -7,9 +7,16 @@ let state = {
 		min: -10,
 		max: 10
 	},
-	functions: {},
 	chart: {},
 	data: {},
+	complex: new Complex({
+			x: 1,
+			y: 1
+		},
+		{
+			x: 1,
+			y: 0
+		}, "addition"),
 	lastPos: {
 		x: 0,
 		y: 0
@@ -26,91 +33,51 @@ function init() {
 	container.width = container.clientWidth;
 	container.height = container.clientHeight;
 
-	state.functions = new Functions({
-		fa: parseFloat(getUrlQuery("fa", 0)),
-		fb: parseFloat(getUrlQuery("fb", 1)),
-		fc: parseFloat(getUrlQuery("fc", 1)),
-		fd: parseFloat(getUrlQuery("fd", 3)),
-		fe: parseFloat(getUrlQuery("fe", 2)),
-		a: 1,
-		b: 1,
-		x1: 1,
-		x2: 2
-	}, state.domain, state.range);
+	let xcounts = state.domain.max - state.domain.min;
+	let ycounts = canvas.clientHeight * xcounts / canvas.clientWidth;
+
+	state.range = {
+		max: ycounts / 2,
+		min: -ycounts / 2
+	};
+
 	setInput();
 
-	let v = state.functions.vars;
-	let formAdd = (el, plusSign = true, x = '') => {
-		if (!el) {
-			return '';
-		}
-		if (plusSign) {
-			return (el > 0 ? '+ ' : '- ') + Math.abs(el) + x;
-		} else {
-			return (el < 0 ? '+ ' : '- ') + Math.abs(el) + x;
-		}
-	};
 	state.data = {
-		A_PLUS_B: {
+		Z1: {
 			labelFormat: () => {
-				return 'g(x)';
+				return 'z1';
 			},
-			label: 'g(x) = A/(x - x1) + B/(x - x2)',
-			borderColor: '#308167',
-			data: state.functions.getAPlusBFractionPoints()
-		},
-		COMPOSED: {
-			labelFormat: () => {
-				return 'f(x)';
-			},
-			label: 'f(x) = 1/((x + 1)(x + 2))',
-			borderColor: 'rgb(255, 99, 132)',
-			data: state.functions.getComposedFractionPoints()
-		},
-		A: {
-			labelFormat: () => {
-				return v.a + '/(x ' + formAdd(v.x1, false) + ')';
-			},
-			label: 'A/(x - x1)',
+			label: 'z1',
 			borderColor: '#ffce2e',
-			data: state.functions.getAFractionPoints()
+			pointBackgroundColor: '#ffce2e',
+			hidden: false,
+			data: [state.complex.z1]
 		},
-		B: {
+		Z2: {
 			labelFormat: () => {
-				return v.b + '/(x ' + formAdd(v.x2, false)+ ')';
+				return 'z2';
 			},
-			label: 'B/(x - x2)',
+			label: 'z2',
 			borderColor: '#7ab1e8',
-			data: state.functions.getBFractionPoints()
+			pointBackgroundColor: '#7ab1e8',
+			hidden: false,
+			data: [state.complex.z2]
 		},
-		ASYMP_A: {
+		RES: {
 			labelFormat: () => {
-				return 'Asymptote x1';
+				return 'result';
 			},
-			label: 'Asymptote x1',
-			borderColor: '#ffce2e',
-			borderDash: [10, 10],
-			hidden: true,
-			data: state.functions.getAsymptote(state.functions.vars.x1)
-		},
-		ASYMP_B: {
-			labelFormat: () => {
-				return 'Asymptote x2';
-			},
-			label: 'Asymptote x2',
-			borderColor: '#7ab1e8',
-			borderDash: [10, 10],
-			hidden: true,
-			data: state.functions.getAsymptote(state.functions.vars.x2)
+			label: 'result',
+			borderColor: '#f87089',
+			pointBackgroundColor: '#f87089',
+			hidden: false,
+			data: [state.complex.getOperationResult()]
 		}
 	};
-	Object.values(state.data).forEach(x => {
-		x.label = x.labelFormat();
-	});
-
 	let ctx = document.getElementById('graph').getContext('2d');
-	Chart.defaults.global.elements.point.radius = 0;
-	Chart.defaults.global.spanGaps = false;
+
+	Chart.defaults.global.elements.point.radius = 5;
 
 	state.chart = new Chart(ctx, {
 		// The type of chart we want to create
@@ -173,6 +140,7 @@ function init() {
 		}
 	});
 	initMousePan();
+	initOpsList();
 	setTimeout(tick, 1000);
 }
 
@@ -184,14 +152,22 @@ function tick() {
 function updateChart(index) {
 	if (index === "all") {
 		Object.keys(state.data).forEach(k => {
-			state.data[k].data = state.functions.getIndexFunctionPoints(k);
+			state.data[k].data = [state.complex.getVar(k)];
 			state.data[k].label = state.data[k].labelFormat();
 		})
 	} else {
-		state.data[index].data = state.functions.getIndexFunctionPoints(index);
+		state.data[index].data = [state.complex.getVar(index)];
 		state.data[index].label = state.data[index].labelFormat();
 	}
 	state.chart.update();
 }
+
+function switchMode(mode) {
+	state.complex.mode = mode;
+	setInput();
+	state.data.Z2.hidden = mode === "inverse" || mode === "conjugate";
+	updateChart("all");
+}
+
 
 init();

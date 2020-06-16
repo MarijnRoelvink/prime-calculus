@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Geometric complexity</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="../../css/cmun-bright.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cmun-bright-semibold.css">
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<script src="../../js/jquery-3.4.1.min.js"></script>
+	<script src="../../js/helpers.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+	        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+	        crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+	<style>
+		html, body, .graph-container {
+			width: 100%;
+			height: 100%;
+			font-family: "Computer Modern Bright", sans-serif;
+			background-color: black;
+			color: white;
+		}
+
+		.graph-container {
+			position: relative;
+			padding: 10px;
+			overflow: hidden;
+		}
+
+		canvas {
+			width: 100%;
+			height: 100%;
+		}
+
+		#control-panel {
+			border-top: 1px solid white;
+			padding: 10px;
+			height: 200px;
+			display: flex;
+		}
+
+		#complex-ops {
+			max-height: 100%;
+			overflow-y: scroll;
+			width: fit-content;
+		}
+
+		.list-group-item {
+			background-color: black;
+			padding-right: 50px;
+			cursor: pointer;
+		}
+
+		input[type="text"], input[type="number"] {
+			margin-right: 5px;
+		}
+
+		#zoom-container {
+			position: absolute;
+			right: 0;
+			width: 50px;
+			display: flex;
+			z-index: 100;
+		}
+
+		#zoom-container img {
+			margin-right: 5px;
+			margin-top: 10px;
+			width: 20px;
+			cursor: pointer;
+		}
+
+		.op-view {
+			height: 100%;
+			width: 100%;
+			display: none;
+			justify-content: center;
+			align-items: center;
+			font-size: 24px;
+		}
+
+		.op-view input {
+			width: 50px;
+			height: 30px;
+		}
+
+		.op-view div {
+			margin: 10px;
+		}
+		#conjugate-view .yellow {
+			border-top: 1px solid white;
+		}
+
+	</style>
+</head>
+<body>
+<div id="zoom-container">
+	<img onclick="zoom(-0.5)" src="../../resources/zoom-in.png">
+	<img onclick="zoom(0.5)" src="../../resources/zoom-out.png">
+</div>
+<div class="d-flex flex-column h-100 w-100">
+	<div class="graph-container">
+		<canvas id="graph"></canvas>
+	</div>
+	<div id="control-panel">
+		<ul id="complex-ops" class="list-group">
+			<li class="list-group-item active" id="choose-addition">Addition</li>
+			<li class="list-group-item" id="choose-subtraction">Subtraction</li>
+			<li class="list-group-item" id="choose-multiplication">Multiplication</li>
+			<li class="list-group-item" id="choose-division">Division</li>
+			<li class="list-group-item" id="choose-inverse">Inverse</li>
+			<li class="list-group-item" id="choose-conjugate">Conjugate</li>
+		</ul>
+		<div id="addition-view" class="op-view" style="display: flex;">
+			<div class="yellow">(
+				<input class="val val-a" type="text">
+				+
+				<input class="val val-b" type="text">i)
+			</div>
+			<div>+</div>
+			<div class="blue">(
+				<input class="val val-c" type="text">
+				+
+				<input class="val val-d" type="text">i)
+			</div>
+			<div>=</div>
+			<div class="res pink">
+				e + fi
+			</div>
+		</div>
+		<div id="subtraction-view" class="op-view">
+			<div class="yellow">(
+				<input class="val val-a" type="text">
+				+
+				<input class="val val-b" type="text">i)
+			</div>
+			<div>-</div>
+			<div class="blue">(
+				<input class="val val-c" type="text">
+				+
+				<input class="val val-d" type="text">i)
+			</div>
+			<div>=</div>
+			<div class="res pink">
+				e + fi
+			</div>
+		</div>
+		<div id="multiplication-view" class="op-view">
+			<div class="yellow">(
+				<input class="val val-a" type="text">
+				+
+				<input class="val val-b" type="text">i)
+			</div>
+			<div class="blue">(
+				<input class="val val-c" type="text">
+				+
+				<input class="val val-d" type="text">i)
+			</div>
+			<div>=</div>
+			<div class="res pink">
+				e + fi
+			</div>
+		</div>
+		<div id="division-view" class="op-view">
+			<div class="yellow">(
+				<input class="val val-a" type="text">
+				+
+				<input class="val val-b" type="text">i)
+			</div>
+			<div>/</div>
+			<div class="blue">(
+				<input class="val val-c" type="text">
+				+
+				<input class="val val-d" type="text">i)
+			</div>
+			<div>=</div>
+			<div class="res pink">
+				e + fi
+			</div>
+		</div>
+		<div id="inverse-view" class="op-view">
+			<div class="">
+				1
+			</div>
+			<div>/</div>
+			<div class="yellow">(
+				<input class="val val-a" type="text">
+				+
+				<input class="val val-b" type="text">i)
+			</div>
+			<div>=</div>
+			<div class="res pink">
+				e + fi
+			</div>
+		</div>
+		<div id="conjugate-view" class="op-view">
+			<div class="yellow">(
+				<input class="val val-a" type="text">
+				+
+				<input class="val val-b" type="text">i)
+			</div>
+			<div>=</div>
+			<div class="res pink">
+				e + fi
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<script src="Complex.js"></script>
+<script src="controls.js"></script>
+<script src="main.js"></script>
+</html>
