@@ -79,6 +79,23 @@
 			cursor: pointer;
 		}
 
+		#choose-grid {
+			position: absolute;
+			right: 60px;
+			z-index: 100;
+			padding: 5px;
+		}
+
+		#choose-grid button {
+			padding: .175rem .75rem;
+		}
+
+		#choose-grid .btn-primary {
+			color: #fff;
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
 		.op-view {
 			height: 100%;
 			width: 100%;
@@ -112,12 +129,21 @@
 			flex-direction: column;
 		}
 
+
 	</style>
 </head>
 <body>
 <div id="zoom-container">
 	<img onclick="zoom(-0.5)" src="../../resources/zoom-in.png">
 	<img onclick="zoom(0.5)" src="../../resources/zoom-out.png">
+</div>
+<div>
+	<div id="choose-grid" class="btn-group">
+		<div class="btn-group" role="group">
+			<button id="grid-button" type="button" class="btn btn-primary" onclick="switchGrid(false)">Grid</button>
+			<button id="radial-button" type="button" class="btn btn-secondary" onclick="switchGrid(true)">Radial</button>
+		</div>
+	</div>
 </div>
 <div class="d-flex flex-row align-items-stretch h-100 w-100">
 	<ul id="complex-ops" class="list-group">

@@ -80,6 +80,17 @@ function initMousePan() {
 	canvas.ontouchend = end;
 }
 
+function switchGrid(radialView) {
+	state.radialView = radialView;
+	$("#choose-grid button").each(function () {
+		this.classList.remove("btn-primary");
+		this.classList.remove("btn-secondary");
+	});
+	$("#grid-button").addClass(!radialView? "btn-primary":"btn-secondary");
+	$("#radial-button").addClass(radialView? "btn-primary":"btn-secondary");
+	updateChart("all");
+}
+
 function zoom(delta) {
 	let dx = delta;
 	let canvas = document.getElementById("graph");

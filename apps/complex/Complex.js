@@ -30,6 +30,8 @@ class Complex {
 				return this.getHelpLine(2);
 			case "RGRID":
 				return this.getGrid();
+			case "RUNITCIRCLE":
+				return this.getUnitCircle();
 			case "RCIRCLES":
 				return this.getCircles();
 			default:
@@ -79,28 +81,28 @@ class Complex {
 	getHelpLine(index) {
 		switch (this.mode) {
 			case "addition":
-				return [index === 1 ? this.z1 : this.z2, this.getOperationResult()];
+				return [index === 1 ? this.z2 : this.z1, this.getOperationResult()];
 			case "subtraction":
-				return index === 1 ? [this.z1, this.getOperationResult()] : [];
+				return index === 2 ? [this.z1, this.getOperationResult()] : [];
 			case "multiplication":
-				return [];
+				return this.getArcHelpLines(index);
 			case "division":
-				return [];
+				return this.getArcHelpLines(index);
 			case "inverse":
-				return [];
+				return this.getArcHelpLines(index);
 			case "conjugate":
 				return [];
 		}
 	}
 
 	getGrid() {
-		if (this.isInRadialMode()) {
+		if (state.radialView) {
 			let res = [];
 			let numLines = 24;
 			for (let i = 0; i < numLines; i++) {
 				let a = i * 2 / numLines * Math.PI;
 				if (i % (numLines / 4) !== 0) {
-					let length = this.getMaxViewSize()*this.getMaxViewSize();
+					let length = this.getMaxViewSize() * this.getMaxViewSize();
 					res.push({
 						x: length * Math.cos(a),
 						y: length * Math.sin(a)
@@ -117,7 +119,7 @@ class Complex {
 	}
 
 	getCircles() {
-		if (this.isInRadialMode()) {
+		if (state.radialView) {
 			let res = [];
 			let numPoints = 24;
 			for (let i = 1; i < this.getMaxViewSize() + 1; i++) {
@@ -139,10 +141,87 @@ class Complex {
 		}
 	}
 
+
+	getUnitCircle() {
+		if (state.radialView) {
+			let res = [];
+			let numPoints = 24;
+			for (let j = 0; j <= numPoints; j++) {
+				let a = j * 2 / numPoints * Math.PI;
+				res.push({
+					x: Math.cos(a),
+					y: Math.sin(a)
+				})
+			}
+			return res;
+		} else {
+			return [];
+		}
+	}
+
+	getArcHelpLines(index) {
+		if (this.mode === "division" && index === 1) {
+			return [];
+		}
+		let from1, from2, to1, to2, radius1, radius2;
+		switch (this.mode) {
+			case "division":
+				if (index === 1) {
+					return [];
+				}
+			case "multiplication":
+				from1 = {x: 0, y: 0};
+				to1 = index === 1 ? this.z1 : this.z2;
+				from2 = index === 1 ? this.z2 : this.z1;
+				to2 = this.getVar("RES");
+				radius1 = index === 1 ? 0.9 : 1.1;
+				radius2 = 2 - radius1;
+				break;
+			case "inverse":
+				if (index === 2) {
+					return [];
+				}
+				from1 = {x: 0, y: 0};
+				to1 = this.z1;
+				from2 = from1;
+				to2 = this.getVar("RES");
+				radius1 = 0.9;
+				radius2 = this.getAbsValue(to2);
+				break;
+		}
+
+		let res = [];
+		res = res.concat(this.getArc(from1,
+			to1,
+			radius1));
+		res.push({x: NaN, y: NaN});
+		res = res.concat(this.getArc(from2,
+			to2,
+			radius2));
+		return res;
+	}
+
+	getArc(from, to, radius) {
+		let base = Math.atan2(from.y, from.x);
+		let angle = Math.atan2(to.y, to.x) - base;
+		let res = [];
+		for (let i = 0; i <= 12; i++) {
+			let subangle = base + angle * i / 12;
+			res.push(
+				{
+					x: radius * Math.cos(subangle),
+					y: radius * Math.sin(subangle)
+				}
+			)
+		}
+		return res;
+	}
+
 	isInRadialMode() {
 		return this.mode === "multiplication"
 			|| this.mode === "division"
-			|| this.mode === "inverse";
+			|| this.mode === "inverse"
+			|| this.mode === "conjugate";
 	}
 
 	doAddition() {
@@ -207,6 +286,14 @@ class Complex {
 		return Math.sqrt(
 			Math.pow(x, 2)
 			+ Math.pow(y, 2));
+	}
+
+	normalizeVec(vec) {
+		let l = this.getAbsValue(vec);
+		return {
+			x: vec.x / l,
+			y: vec.y / l
+		}
 	}
 
 	getMaxViewSize() {

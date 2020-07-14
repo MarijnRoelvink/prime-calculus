@@ -15,13 +15,14 @@ let state = {
 		},
 		{
 			x: 1,
-			y: 0
+			y: 0.5
 		}, "addition"),
 	lastPos: {
 		x: 0,
 		y: 0
 	},
-	dragging: false
+	dragging: false,
+	radialView: false
 };
 
 
@@ -82,9 +83,8 @@ function init() {
 				return '';
 			},
 			label: '',
-			borderColor: '#7ab1e8',
-			pointBackgroundColor: '#7ab1e8',
-			pointRadius: [0, 0],
+			borderColor: '#ffce2e',
+			pointRadius: 0,
 			hidden: false,
 			borderDash: [10, 10],
 			data: state.complex.getHelpLine(1)
@@ -94,9 +94,8 @@ function init() {
 				return '';
 			},
 			label: '',
-			borderColor: '#ffce2e',
-			pointBackgroundColor: '#ffce2e',
-			pointRadius: [0, 0],
+			borderColor: '#7ab1e8',
+			pointRadius: 0,
 			hidden: false,
 			borderDash: [10, 10],
 			data: state.complex.getHelpLine(2)
@@ -107,11 +106,21 @@ function init() {
 			},
 			label: '',
 			borderColor: 'gray',
-			pointBackgroundColor: 'gray',
 			pointRadius: 0,
 			borderWidth: 1,
 			lineTension: 0,
 			data: state.complex.getChartData("RGRID")
+		},
+		RUNITCIRCLE: {
+			labelFormat: () => {
+				return '';
+			},
+			label: '',
+			borderColor: 'white',
+			pointRadius: 0,
+			borderWidth: 1,
+			spanGaps: false,
+			data: state.complex.getChartData("RUNITCIRCLE")
 		},
 		RCIRCLES: {
 			labelFormat: () => {
@@ -119,7 +128,6 @@ function init() {
 			},
 			label: '',
 			borderColor: 'gray',
-			pointBackgroundColor: 'gray',
 			pointRadius: 0,
 			borderWidth: 1,
 			spanGaps: false,
@@ -141,6 +149,9 @@ function init() {
 		options: {
 			maintainAspectRatio: false,
 			responsive: true,
+			onClick: (event) => {
+				console.log(event);
+			},
 			animation: {
 				duration: 0 // general animation time
 			},
@@ -211,8 +222,8 @@ function updateChart(index) {
 		state.data[index].data = state.complex.getChartData(index);
 		state.data[index].label = state.data[index].labelFormat();
 	}
-	state.chart.options.scales.xAxes[0].gridLines.lineWidth = state.complex.isInRadialMode()? 0 : 1;
-	state.chart.options.scales.yAxes[0].gridLines.lineWidth = state.complex.isInRadialMode()? 0 : 1;
+	state.chart.options.scales.xAxes[0].gridLines.lineWidth = state.radialView? 0 : 1;
+	state.chart.options.scales.yAxes[0].gridLines.lineWidth = state.radialView? 0 : 1;
 	state.chart.update();
 }
 
@@ -220,7 +231,7 @@ function switchMode(mode) {
 	state.complex.mode = mode;
 	setInput();
 	state.data.Z2.hidden = mode === "inverse" || mode === "conjugate";
-	updateChart("all");
+	switchGrid(state.complex.isInRadialMode());
 }
 
 
