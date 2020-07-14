@@ -100,9 +100,10 @@ class Complex {
 			for (let i = 0; i < numLines; i++) {
 				let a = i * 2 / numLines * Math.PI;
 				if (i % (numLines / 4) !== 0) {
+					let length = this.getMaxViewSize()*this.getMaxViewSize();
 					res.push({
-						x: state.domain.max * Math.cos(a),
-						y: state.domain.max * Math.sin(a)
+						x: length * Math.cos(a),
+						y: length * Math.sin(a)
 					}, {
 						x: 0,
 						y: 0
@@ -119,7 +120,7 @@ class Complex {
 		if (this.isInRadialMode()) {
 			let res = [];
 			let numPoints = 24;
-			for (let i = 1; i < state.range.max; i++) {
+			for (let i = 1; i < this.getMaxViewSize() + 1; i++) {
 				for (let j = 0; j <= numPoints; j++) {
 					let a = j * 2 / numPoints * Math.PI;
 					res.push({
@@ -194,5 +195,30 @@ class Complex {
 			x: this.z1.x,
 			y: -this.z1.y
 		};
+	}
+
+	/**
+	 * Returns the absolute value of a complex number x + yi.
+	 * @param x real part
+	 * @param y imaginary part
+	 * @return sqrt(a^2 + b^2)
+	 */
+	getAbsValue({x, y}) {
+		return Math.sqrt(
+			Math.pow(x, 2)
+			+ Math.pow(y, 2));
+	}
+
+	getMaxViewSize() {
+		let vals = [this.getAbsValue(this.getVar("RES")),
+			this.getAbsValue(this.z1),
+			this.getAbsValue(this.z2),
+			state.range.max,
+			Math.abs(state.range.min),
+			state.domain.max,
+			Math.abs(state.domain.min)];
+		return vals.reduce((prev, curr, index) => {
+			return Math.max(prev, curr);
+		});
 	}
 }
