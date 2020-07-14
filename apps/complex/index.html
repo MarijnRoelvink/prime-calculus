@@ -38,14 +38,20 @@
 		#control-panel {
 			border-top: 1px solid white;
 			padding: 10px;
-			height: 200px;
+			height: 150px;
 			display: flex;
 		}
 
 		#complex-ops {
-			max-height: 100%;
+			height: 100%;
 			overflow-y: scroll;
 			width: fit-content;
+			border-right: 1px solid white;
+			padding-top: 20px;
+		}
+
+		#complex-ops li {
+			border-radius: 0!important;
 		}
 
 		.list-group-item {
@@ -100,6 +106,11 @@
 		.fraction .down {
 			margin-top: 0!important;
 		}
+		#top-container {
+			display: flex;
+			flex-grow: 2;
+			flex-direction: column;
+		}
 
 	</style>
 </head>
@@ -108,112 +119,114 @@
 	<img onclick="zoom(-0.5)" src="../../resources/zoom-in.png">
 	<img onclick="zoom(0.5)" src="../../resources/zoom-out.png">
 </div>
-<div class="d-flex flex-column h-100 w-100">
-	<div class="graph-container">
-		<canvas id="graph"></canvas>
-	</div>
-	<div id="control-panel">
-		<ul id="complex-ops" class="list-group">
-			<li class="list-group-item active" id="choose-addition">Addition</li>
-			<li class="list-group-item" id="choose-subtraction">Subtraction</li>
-			<li class="list-group-item" id="choose-multiplication">Multiplication</li>
-			<li class="list-group-item" id="choose-division">Division</li>
-			<li class="list-group-item" id="choose-inverse">Inverse</li>
-			<li class="list-group-item" id="choose-conjugate">Conjugate</li>
-		</ul>
-		<div id="addition-view" class="op-view" style="display: flex;">
-			<div class="yellow">(
-				<input class="val val-a" type="text">
-				+
-				<input class="val val-b" type="text">i)
-			</div>
-			<div>+</div>
-			<div class="blue">(
-				<input class="val val-c" type="text">
-				+
-				<input class="val val-d" type="text">i)
-			</div>
-			<div>=</div>
-			<div class="res pink">
-				e + fi
-			</div>
+<div class="d-flex flex-row align-items-stretch h-100 w-100">
+	<ul id="complex-ops" class="list-group">
+		<li class="list-group-item active" id="choose-addition">Addition</li>
+		<li class="list-group-item" id="choose-subtraction">Subtraction</li>
+		<li class="list-group-item" id="choose-multiplication">Multiplication</li>
+		<li class="list-group-item" id="choose-division">Division</li>
+		<li class="list-group-item" id="choose-inverse">Inverse</li>
+		<li class="list-group-item" id="choose-conjugate">Conjugate</li>
+	</ul>
+	<div id="top-container">
+		<div class="graph-container">
+			<canvas id="graph"></canvas>
 		</div>
-		<div id="subtraction-view" class="op-view">
-			<div class="yellow">(
-				<input class="val val-a" type="text">
-				+
-				<input class="val val-b" type="text">i)
-			</div>
-			<div>-</div>
-			<div class="blue">(
-				<input class="val val-c" type="text">
-				+
-				<input class="val val-d" type="text">i)
-			</div>
-			<div>=</div>
-			<div class="res pink">
-				e + fi
-			</div>
-		</div>
-		<div id="multiplication-view" class="op-view">
-			<div class="yellow">(
-				<input class="val val-a" type="text">
-				+
-				<input class="val val-b" type="text">i)
-			</div>
-			<div class="blue">(
-				<input class="val val-c" type="text">
-				+
-				<input class="val val-d" type="text">i)
-			</div>
-			<div>=</div>
-			<div class="res pink">
-				e + fi
-			</div>
-		</div>
-		<div id="division-view" class="op-view">
-			<div class="fraction">
-				<div class="yellow up">(
+		<div id="control-panel">
+			<div id="addition-view" class="op-view" style="display: flex;">
+				<div class="yellow">(
 					<input class="val val-a" type="text">
 					+
 					<input class="val val-b" type="text">i)
 				</div>
-				<div class="blue down">(
+				<div>+</div>
+				<div class="blue">(
 					<input class="val val-c" type="text">
 					+
 					<input class="val val-d" type="text">i)
 				</div>
-			</div>
-			<div>=</div>
-			<div class="res pink">
-				e + fi
-			</div>
-		</div>
-		<div id="inverse-view" class="op-view">
-			<div class="fraction">
-				<div class="up">
-					1
+				<div>=</div>
+				<div class="res pink">
+					e + fi
 				</div>
-				<div class="yellow down">(
+			</div>
+			<div id="subtraction-view" class="op-view">
+				<div class="yellow">(
 					<input class="val val-a" type="text">
 					+
 					<input class="val val-b" type="text">i)
 				</div>
+				<div>-</div>
+				<div class="blue">(
+					<input class="val val-c" type="text">
+					+
+					<input class="val val-d" type="text">i)
+				</div>
+				<div>=</div>
+				<div class="res pink">
+					e + fi
+				</div>
 			</div>
-			<div>=</div>
-			<div class="res pink">
-				e + fi
+			<div id="multiplication-view" class="op-view">
+				<div class="yellow">(
+					<input class="val val-a" type="text">
+					+
+					<input class="val val-b" type="text">i)
+				</div>
+				<div class="blue">(
+					<input class="val val-c" type="text">
+					+
+					<input class="val val-d" type="text">i)
+				</div>
+				<div>=</div>
+				<div class="res pink">
+					e + fi
+				</div>
 			</div>
-		</div>
-		<div id="conjugate-view" class="op-view">
-			<div class="yellow">(
-				<input class="val val-a" type="text">
-				+
-				<input class="val val-b" type="text">i)
+			<div id="division-view" class="op-view">
+				<div class="fraction">
+					<div class="yellow up">(
+						<input class="val val-a" type="text">
+						+
+						<input class="val val-b" type="text">i)
+					</div>
+					<div class="blue down">(
+						<input class="val val-c" type="text">
+						+
+						<input class="val val-d" type="text">i)
+					</div>
+				</div>
+				<div>=</div>
+				<div class="res pink">
+					e + fi
+				</div>
 			</div>
-			<div>=</div>
-			<div class="res pink">
-				e + fi
+			<div id="inverse-view" class="op-view">
+				<div class="fraction">
+					<div class="up">
+						1
+					</div>
+					<div class="yellow down">(
+						<input class="val val-a" type="text">
+						+
+						<input class="val val-b" type="text">i)
+					</div>
+				</div>
+				<div>=</div>
+				<div class="res pink">
+					e + fi
+				</div>
+			</div>
+			<div id="conjugate-view" class="op-view">
+				<div class="yellow">(
+					<input class="val val-a" type="text">
+					+
+					<input class="val val-b" type="text">i)
+				</div>
+				<div>=</div>
+				<div class="res pink">
+					e + fi
+				</div>
 			</div>
 		</div>
 	</div>
