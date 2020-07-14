@@ -91,7 +91,14 @@
 			margin: 10px;
 		}
 		#conjugate-view .yellow {
-			border-top: 1px solid white;
+			border-top: 1.5px solid white;
+		}
+		.fraction .up {
+			margin-bottom: 0!important;
+			border-bottom: 1.5px solid white;
+		}
+		.fraction .down {
+			margin-top: 0!important;
 		}
 
 	</style>
@@ -165,16 +172,17 @@
 			</div>
 		</div>
 		<div id="division-view" class="op-view">
-			<div class="yellow">(
-				<input class="val val-a" type="text">
-				+
-				<input class="val val-b" type="text">i)
-			</div>
-			<div>/</div>
-			<div class="blue">(
-				<input class="val val-c" type="text">
-				+
-				<input class="val val-d" type="text">i)
+			<div class="fraction">
+				<div class="yellow up">(
+					<input class="val val-a" type="text">
+					+
+					<input class="val val-b" type="text">i)
+				</div>
+				<div class="blue down">(
+					<input class="val val-c" type="text">
+					+
+					<input class="val val-d" type="text">i)
+				</div>
 			</div>
 			<div>=</div>
 			<div class="res pink">
@@ -182,14 +190,15 @@
 			</div>
 		</div>
 		<div id="inverse-view" class="op-view">
-			<div class="">
-				1
-			</div>
-			<div>/</div>
-			<div class="yellow">(
-				<input class="val val-a" type="text">
-				+
-				<input class="val val-b" type="text">i)
+			<div class="fraction">
+				<div class="up">
+					1
+				</div>
+				<div class="yellow down">(
+					<input class="val val-a" type="text">
+					+
+					<input class="val val-b" type="text">i)
+				</div>
 			</div>
 			<div>=</div>
 			<div class="res pink">
@@ -213,4 +222,5 @@
 <script src="Complex.js"></script>
 <script src="controls.js"></script>
 <script src="main.js"></script>
+<!--<script src="try.js"></script>-->
 </html>

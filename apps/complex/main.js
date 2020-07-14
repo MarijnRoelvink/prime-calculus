@@ -44,6 +44,17 @@ function init() {
 	setInput();
 
 	state.data = {
+		RES: {
+			labelFormat: () => {
+				return 'result';
+			},
+			label: 'result',
+			borderColor: '#f87089',
+			pointBackgroundColor: '#f87089',
+			pointRadius: [0, 5],
+			hidden: false,
+			data: state.complex.getChartData("RES")
+		},
 		Z1: {
 			labelFormat: () => {
 				return 'z1';
@@ -51,8 +62,9 @@ function init() {
 			label: 'z1',
 			borderColor: '#ffce2e',
 			pointBackgroundColor: '#ffce2e',
+			pointRadius: [0, 5],
 			hidden: false,
-			data: [state.complex.z1]
+			data: state.complex.getChartData("Z1")
 		},
 		Z2: {
 			labelFormat: () => {
@@ -61,23 +73,60 @@ function init() {
 			label: 'z2',
 			borderColor: '#7ab1e8',
 			pointBackgroundColor: '#7ab1e8',
+			pointRadius: [0, 5],
 			hidden: false,
-			data: [state.complex.z2]
+			data: state.complex.getChartData("Z2")
 		},
-		RES: {
+		HELP1: {
 			labelFormat: () => {
-				return 'result';
+				return '';
 			},
-			label: 'result',
-			borderColor: '#f87089',
-			pointBackgroundColor: '#f87089',
+			label: '',
+			borderColor: '#7ab1e8',
+			pointBackgroundColor: '#7ab1e8',
+			pointRadius: [0, 0],
 			hidden: false,
-			data: [state.complex.getOperationResult()]
-		}
+			borderDash: [10, 10],
+			data: state.complex.getHelpLine(1)
+		},
+		HELP2: {
+			labelFormat: () => {
+				return '';
+			},
+			label: '',
+			borderColor: '#ffce2e',
+			pointBackgroundColor: '#ffce2e',
+			pointRadius: [0, 0],
+			hidden: false,
+			borderDash: [10, 10],
+			data: state.complex.getHelpLine(2)
+		},
+		RGRID: {
+			labelFormat: () => {
+				return '';
+			},
+			label: '',
+			borderColor: 'gray',
+			pointBackgroundColor: 'gray',
+			pointRadius: 0,
+			borderWidth: 1,
+			lineTension: 0,
+			data: state.complex.getChartData("RGRID")
+		},
+		RCIRCLES: {
+			labelFormat: () => {
+				return '';
+			},
+			label: '',
+			borderColor: 'gray',
+			pointBackgroundColor: 'gray',
+			pointRadius: 0,
+			borderWidth: 1,
+			spanGaps: false,
+			data: state.complex.getChartData("RCIRCLES")
+		},
 	};
 	let ctx = document.getElementById('graph').getContext('2d');
-
-	Chart.defaults.global.elements.point.radius = 5;
 
 	state.chart = new Chart(ctx, {
 		// The type of chart we want to create
@@ -103,7 +152,10 @@ function init() {
 				labels: {
 					// This more specific font property overrides the global property
 					fontColor: '#fff',
-					fontSize: 16
+					fontSize: 16,
+					filter: (item, data) => {
+						return item.text !== '';
+					}
 				}
 			},
 			scales: {
@@ -152,13 +204,15 @@ function tick() {
 function updateChart(index) {
 	if (index === "all") {
 		Object.keys(state.data).forEach(k => {
-			state.data[k].data = [state.complex.getVar(k)];
+			state.data[k].data = state.complex.getChartData(k);
 			state.data[k].label = state.data[k].labelFormat();
 		})
 	} else {
-		state.data[index].data = [state.complex.getVar(index)];
+		state.data[index].data = state.complex.getChartData(index);
 		state.data[index].label = state.data[index].labelFormat();
 	}
+	state.chart.options.scales.xAxes[0].gridLines.lineWidth = state.complex.isInRadialMode()? 0 : 1;
+	state.chart.options.scales.yAxes[0].gridLines.lineWidth = state.complex.isInRadialMode()? 0 : 1;
 	state.chart.update();
 }
 
