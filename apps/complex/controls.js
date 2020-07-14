@@ -1,14 +1,14 @@
 function setInput() {
 	$(".val").each(function () {
 		let index = this.classList.item(1).split("-")[1];
-		$(this).val(state.complex.getVar(index));
+		$(this).val(state.complex.getVar(index).toFixed(2));
 	});
 	let res = state.complex.getVar("RES");
 	$("#" + state.complex.mode + "-view .res").first().html(res.x + " + " + res.y + "i");
 }
 
 function updateInput() {
-	$("#"+ state.complex.mode + "-view .val").each(function () {
+	$("#" + state.complex.mode + "-view .val").each(function () {
 		let index = this.classList.item(1).split("-")[1];
 		if (parseFloat($(this).val()) !== state.complex.getVar(index)) {
 			state.complex.setVar(index, parseFloat($(this).val()));
@@ -25,7 +25,7 @@ function initOpsList() {
 		let self = this;
 		self.onclick = () => {
 			let mode = self.id.split("-")[1];
-			if(mode !== state.complex.mode) {
+			if (mode !== state.complex.mode) {
 				$("#choose-" + state.complex.mode).removeClass("active");
 				$(".op-view").each(function () {
 					$(this).css("display", "none");
@@ -41,18 +41,29 @@ function initOpsList() {
 function initMousePan() {
 	let canvas = document.getElementById("graph");
 
-	let start = (x, y) => {
+	let start = (ev, x, y) => {
 		state.lastPos = {
 			x: x,
 			y: y
 		};
 		state.dragging = true;
+		let el = state.chart.getElementAtEvent(ev);
+		state.dragPoint = el.length > 0 ? Object.keys(state.data)[el[0]._datasetIndex] : "";
+
 	};
 	let move = (x, y) => {
 		if (state.dragging) {
 			let dx = -(x - state.lastPos.x) / canvas.offsetWidth * (state.domain.max - state.domain.min);
 			let dy = (y - state.lastPos.y) / canvas.offsetHeight * (state.range.max - state.range.min);
-			pan(dx, dy);
+
+			if (state.dragPoint !== "") {
+				state.complex.getVar(state.dragPoint).x -= dx;
+				state.complex.getVar(state.dragPoint).y -= dy;
+				setInput();
+				updateChart("all");
+			} else {
+				pan(dx, dy);
+			}
 			state.lastPos = {
 				x: x,
 				y: y
@@ -65,10 +76,10 @@ function initMousePan() {
 	};
 
 	canvas.onmousedown = function (event) {
-		start(event.offsetX, event.offsetY);
+		start(event, event.offsetX, event.offsetY);
 	};
 	canvas.ontouchstart = function (event) {
-		start(event.touches[0].clientX, event.touches[0].clientY);
+		start(event, event.touches[0].clientX, event.touches[0].clientY);
 	};
 	canvas.onmousemove = function (event) {
 		move(event.offsetX, event.offsetY);
@@ -86,8 +97,8 @@ function switchGrid(radialView) {
 		this.classList.remove("btn-primary");
 		this.classList.remove("btn-secondary");
 	});
-	$("#grid-button").addClass(!radialView? "btn-primary":"btn-secondary");
-	$("#radial-button").addClass(radialView? "btn-primary":"btn-secondary");
+	$("#grid-button").addClass(!radialView ? "btn-primary" : "btn-secondary");
+	$("#radial-button").addClass(radialView ? "btn-primary" : "btn-secondary");
 	updateChart("all");
 }
 

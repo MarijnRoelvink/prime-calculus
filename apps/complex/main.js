@@ -22,7 +22,8 @@ let state = {
 		y: 0
 	},
 	dragging: false,
-	radialView: false
+	radialView: false,
+	dragPoint: ""
 };
 
 
@@ -149,8 +150,8 @@ function init() {
 		options: {
 			maintainAspectRatio: false,
 			responsive: true,
-			onClick: (event) => {
-				console.log(event);
+			tooltips: {
+				enabled: false
 			},
 			animation: {
 				duration: 0 // general animation time

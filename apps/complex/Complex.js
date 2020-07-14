@@ -62,20 +62,30 @@ class Complex {
 	}
 
 	getOperationResult() {
+		let res;
 		switch (this.mode) {
 			case "addition":
-				return this.doAddition();
+				res = this.doAddition();
+				break;
 			case "subtraction":
-				return this.doSubtraction();
+				res = this.doSubtraction();
+				break;
 			case "multiplication":
-				return this.doMultiplication();
+				res = this.doMultiplication();
+				break;
 			case "division":
-				return this.doDivision();
+				res = this.doDivision();
+				break;
 			case "inverse":
-				return this.doInverse();
+				res = this.doInverse();
+				break;
 			case "conjugate":
-				return this.doConjugate();
+				res = this.doConjugate();
+				break;
 		}
+		res.x = Math.round(res.x*100)/100;
+		res.y = Math.round(res.y*100)/100;
+		return res;
 	}
 
 	getHelpLine(index) {
