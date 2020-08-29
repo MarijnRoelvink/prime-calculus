@@ -107,3 +107,13 @@ function pan(dx, dy) {
 	state.chart.config.options.scales.yAxes[0].ticks.max = state.range.max;
 	updateChart("all");
 }
+
+function getHelp() {
+	$("#help-video").attr('hidden', false);
+	$("#background-video").attr('hidden', false);
+}
+
+function noMoreHelp() {
+	$("#help-video").attr('hidden', true);
+	$("#background-video").attr('hidden', true);
+}
