@@ -115,5 +115,8 @@ function getHelp() {
 
 function noMoreHelp() {
 	$("#help-video").attr('hidden', true);
+	let video = $("#help-video").attr("src");
+	$("#help-video").attr("src","");
+	$("#help-video").attr("src",video);
 	$("#background-video").attr('hidden', true);
 }
