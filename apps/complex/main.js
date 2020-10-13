@@ -203,7 +203,7 @@ function init() {
 			}
 		}
 	});
-	initMousePan();
+	initMouseDrag();
 	initOpsList();
 	setTimeout(tick, 1000);
 }

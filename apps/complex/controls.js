@@ -4,7 +4,7 @@ function setInput() {
 		$(this).val(state.complex.getVar(index).toFixed(2));
 	});
 	let res = state.complex.getVar("RES");
-	$("#" + state.complex.mode + "-view .res").first().html(res.x + " + " + res.y + "i");
+	$("#" + state.complex.mode + "-view .res").first().html(res.x.toFixed(2) + " + " + res.y.toFixed(2) + "i");
 }
 
 function updateInput() {
@@ -13,7 +13,7 @@ function updateInput() {
 		if (parseFloat($(this).val()) !== state.complex.getVar(index)) {
 			state.complex.setVar(index, parseFloat($(this).val()));
 			let res = state.complex.getVar("RES");
-			$("#" + state.complex.mode + "-view .res").first().html(res.x + " + " + res.y + "i");
+			$("#" + state.complex.mode + "-view .res").first().html(res.x.toFixed(2)  + " + " + res.y.toFixed(2)  + "i");
 			updateChart("all");
 		}
 	});
@@ -38,7 +38,7 @@ function initOpsList() {
 	});
 }
 
-function initMousePan() {
+function initMouseDrag() {
 	let canvas = document.getElementById("graph");
 
 	let start = (ev, x, y) => {
